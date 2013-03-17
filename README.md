@@ -3,7 +3,8 @@ node-teamspeak
 
 This is a tiny CommonJS-module which allows you to connect
 to any TeamSpeak (R)-3-Server which has the ServerQuery-API
-enabled. Using the ServerQuery-API, you can do a normal TeamSpeak-user can do
+enabled. Using the ServerQuery-API, you can do everything
+a normal TeamSpeak-user can do
 (except sending and receiving voice data) automatically via JavaScript
 (e. g. listing clients logged in on the server).
 
