@@ -26,7 +26,7 @@ account "ServerAdmin" which is created during the installation of the
 server). The following code prints out a JSON-array containing all
  clients that are currently connected to the first virtual server:
 
-	var TeamSpeakClient = require("./teamspeak.js"),
+	var TeamSpeakClient = require("node-teamspeak"),
 		util = require("util");
 
 	var cl = new TeamSpeakClient("##SERVERIP###");

@@ -122,14 +122,12 @@ function TeamSpeakClient(host, port){
 				if(status == 0) checkQueue();
 				return;
 			}
-			// console.log(s);
 			// Antwort besteht aus ein bis zwei Zeilen: Zuletzt kommt immer error
 			var response = undefined;
 			if(s.indexOf("error") == 0){
 				response = parseResponse(s.substr("error ".length).trim());
 				executing.error = response;
 				if(executing.error.id == 0) delete executing.error;
-				console.log(util.inspect(executing));
 				if(executing.cb) executing.cb.call(executing, executing.result, executing.response);
 				executing = null;
 				checkQueue();

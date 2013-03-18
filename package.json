@@ -2,14 +2,13 @@
   "author": "gwTumm <timklge@gmail.com> (https://github.com/gwTumm)",
   "name": "node-teamspeak",
   "description": "TeamSpeak (R)-3-ServerQuery-Client for node.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/gwTumm/node-teamspeak.git"
   },
   "main": "index.js",
   "dependencies": {"line-input-stream": ">=1.0.1"},
-  "devDependencies": {},
   "keywords": ["teamspeak", "serverquery", "ts3", "ts"],
   "optionalDependencies": {},
   "engines": {
