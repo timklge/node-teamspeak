@@ -56,15 +56,15 @@ function TeamSpeakClient(host, port){
 			args.forEach(function(v){
 				var key = tsunescape(v.substr(0, v.indexOf("=")));
 				var value = tsunescape(v.substr(v.indexOf("=")+1));
-				if(parseInt(value, 10) == value) value = parseInt(value, 10);
+				if(parseInt(value, 10) === value) value = parseInt(value, 10);
 				thisrec[key] = value;
 			});
 			return thisrec;
 		});
 		
-		if(response.length == 0){
+		if(response.length === 0){
 			response = null;
-		} else if(response.length == 1){
+		} else if(response.length === 1){
 			response = response.shift();
 		}
 		
@@ -79,7 +79,7 @@ function TeamSpeakClient(host, port){
 		args.forEach(function(v){
 			if(util.isArray(v)){
 				options = v;
-			} else if(typeof v == "function"){
+			} else if(typeof v === "function"){
 				callback = v;
 			} else {
 				params = v;
@@ -101,7 +101,7 @@ function TeamSpeakClient(host, port){
 			}
 		}
 		queue.push({cmd: cmd, options: options, parameters: params, text: tosend, cb: callback});
-		if(status == 0) checkQueue();
+		if(status === 0) checkQueue();
 	};
 	
 	socket.on("error", function(err){
@@ -119,19 +119,19 @@ function TeamSpeakClient(host, port){
 			// Erste zwei vom Server gesendete Zeilen ignorieren
 			if(status < 0){
 				status++;
-				if(status == 0) checkQueue();
+				if(status === 0) checkQueue();
 				return;
 			}
 			// Antwort besteht aus ein bis zwei Zeilen: Zuletzt kommt immer error
 			var response = undefined;
-			if(s.indexOf("error") == 0){
+			if(s.indexOf("error") === 0){
 				response = parseResponse(s.substr("error ".length).trim());
 				executing.error = response;
-				if(executing.error.id == 0) delete executing.error;
+				if(executing.error.id === 0) delete executing.error;
 				if(executing.cb) executing.cb.call(executing, executing.result, executing.response);
 				executing = null;
 				checkQueue();
-			} else if(s.indexOf("notify") == 0){
+			} else if(s.indexOf("notify") === 0){
 				s = s.substr("notify".length);
 				response = parseResponse(s);
 				self.emit(s.substr(0, s.indexOf(" ")), response);
