@@ -5,11 +5,9 @@ var net = require("net"),
 
 function TeamSpeakClient(host, port){
 	events.EventEmitter.call(this);
-	
-	if(!port) port = 10011;
-	if(!host) host = "localhost";
+
 	var self = this,
-		socket = net.connect(port, host),
+		socket = net.connect(port || 10011, host || 'localhost'),
 		reader = null,
 		status = -2,
 		queue = [],
@@ -17,25 +15,25 @@ function TeamSpeakClient(host, port){
 	
 	function tsescape(s){
 		var r = s.replace(/\\/g, "\\\\");// Backslash
-		r = r.replace(/\//g, "\\/");	// Slash
-		r = r.replace(/\|/g, "\\p");	// Pipe
-		r = r.replace(/\n/g, "\\n");	// Newline
-		r = r.replace(/\r/g, "\\r");	// Carriage Return
-		r = r.replace(/\t/g, "\\t");	// Tab
-		r = r.replace(/\v/g, "\\v");	// Vertical Tab
-		r = r.replace(/ /g, "\\s");		// Whitespace
+		r = r.replace(/\//g, "\\/");     // Slash
+		r = r.replace(/\|/g, "\\p");     // Pipe
+		r = r.replace(/\n/g, "\\n");     // Newline
+		r = r.replace(/\r/g, "\\r");     // Carriage Return
+		r = r.replace(/\t/g, "\\t");     // Tab
+		r = r.replace(/\v/g, "\\v");     // Vertical Tab
+		r = r.replace(/ /g, "\\s");      // Whitespace
 		return r;
 	}
 	
 	function tsunescape(s){
-		var r = s.replace(/\\s/g, " ");	// Whitespace
-		r = r.replace(/\\p/g, "|");		// Pipe
-		r = r.replace(/\\n/g, "\n");	// Newline
-		r = r.replace(/\\r/g, "\r");	// Carriage Return
-		r = r.replace(/\\t/g, "\t");	// Tabu
-		r = r.replace(/\\v/g, "\v");	// Vertical Tab
-		r = r.replace(/\\\//g, "\/");	// Slash
-		r = r.replace(/\\\\/g, "\\"); 	// Backslash
+		var r = s.replace(/\\s/g, " "); // Whitespace
+		r = r.replace(/\\p/g, "|");     // Pipe
+		r = r.replace(/\\n/g, "\n");    // Newline
+		r = r.replace(/\\r/g, "\r");    // Carriage Return
+		r = r.replace(/\\t/g, "\t");    // Tabu
+		r = r.replace(/\\v/g, "\v");    // Vertical Tab
+		r = r.replace(/\\\//g, "\/");   // Slash
+		r = r.replace(/\\\\/g, "\\");   // Backslash
 		return r;
 	}
 	
