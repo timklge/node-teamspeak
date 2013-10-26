@@ -126,7 +126,8 @@ function TeamSpeakClient(host, port){
 				response = parseResponse(s.substr("error ".length).trim());
 				executing.error = response;
 				if(executing.error.id === 0) delete executing.error;
-				if(executing.cb) executing.cb.call(executing, executing.result, executing.response);
+				if(executing.cb) executing.cb.call(executing, executing.result, executing.response,
+					executing.rawResponse);
 				executing = null;
 				checkQueue();
 			} else if(s.indexOf("notify") === 0){
@@ -135,6 +136,7 @@ function TeamSpeakClient(host, port){
 				self.emit(s.substr(0, s.indexOf(" ")), response);
 			} else {
 				response = parseResponse(s); 
+				executing.rawResponse = s;
 				executing.response = response;
 			}
 		});
