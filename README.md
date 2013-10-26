@@ -30,9 +30,9 @@ server). The following code prints out a JSON-array containing all
 		util = require("util");
 
 	var cl = new TeamSpeakClient("##SERVERIP###");
-	cl.send("login", {client_login_name: "##USERNAME##", client_login_password: "##PASSWORD##"}, function(err, response){
-		cl.send("use", {sid: 1}, function(err, response){
-			cl.send("clientlist", function(err, response){
+	cl.send("login", {client_login_name: "##USERNAME##", client_login_password: "##PASSWORD##"}, function(err, response, rawResponse){
+		cl.send("use", {sid: 1}, function(err, response, rawResponse){
+			cl.send("clientlist", function(err, response, rawResponse){
 				console.log(util.inspect(response));
 			});
 		});
