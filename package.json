@@ -1,8 +1,8 @@
 {
-  "author": "gwTumm <timklge@gmail.com> (https://github.com/gwTumm)",
+  "author": "gwTumm <timklge@wh2.tu-dresden.de> (https://github.com/gwTumm)",
   "name": "node-teamspeak",
   "description": "TeamSpeak (R)-3-ServerQuery-Client for node.js",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/gwTumm/node-teamspeak.git"
