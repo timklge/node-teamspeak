@@ -133,7 +133,7 @@ function TeamSpeakClient(host, port){
 				s = s.substr("notify".length);
 				response = parseResponse(s);
 				self.emit(s.substr(0, s.indexOf(" ")), response);
-			} else {
+			} else if(executing) {
 				response = parseResponse(s); 
 				executing.rawResponse = s;
 				executing.response = response;
