@@ -14,6 +14,10 @@
   "engines": {
     "node": "*"
   },
-  "license": "WTFPL",
+  "bugs": {
+	"url": "https://github.com/gwTumm/node-teamspeak/issues",
+	"email": "timklge@wh2.tu-dresden.de"
+  },
+  "license": "Beerware",
   "readmeFilename": "README.md"
 }
