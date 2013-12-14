@@ -23,7 +23,8 @@ function TeamSpeakClient(host, port){
 		executing = null;
 	
 	function tsescape(s){
-		var r = s.replace(/\\/g, "\\\\");// Backslash
+		var r = String(s);
+		r = r.replace(/\\/g, "\\\\");// Backslash
 		r = r.replace(/\//g, "\\/");     // Slash
 		r = r.replace(/\|/g, "\\p");     // Pipe
 		r = r.replace(/\n/g, "\\n");     // Newline
