@@ -7,19 +7,19 @@
  * ----------------------------------------------------------------------------
  */
 
-var net = require("net"),
+var net =             require("net"),
 	LineInputStream = require("line-input-stream"),
-	events = require("events"),
-	util = require("util");
+	events =          require("events"),
+	util =            require("util");
 
 function TeamSpeakClient(host, port){
 	events.EventEmitter.call(this);
 
-	var self = this,
-		socket = net.connect(port || 10011, host || 'localhost'),
-		reader = null,
-		status = -2,
-		queue = [],
+	var self =      this,
+		socket =    net.connect(port || 10011, host || 'localhost'),
+		reader =    null,
+		status =    -2,
+		queue =     [],
 		executing = null;
 	
 	function tsescape(s){
@@ -79,6 +79,15 @@ function TeamSpeakClient(host, port){
 		return response;
 	}
 	
+	// Return pending commands that were already sent to the server.
+	// Note that they have been parsed - Access getPending()[0].text to get
+	// the full text representation of the command.
+	// The pending queue should not be modified.
+	TeamSpeakClient.prototype.getPending = function(){
+		return queue.slice(0);
+	};
+	
+	// Send a command to the server
 	TeamSpeakClient.prototype.send = function(){
 		var args = Array.prototype.slice.call(arguments);
 		var options = [], params = {};
