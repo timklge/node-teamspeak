@@ -24,19 +24,19 @@ function TeamSpeakClient(host, port){
 	
 	function tsescape(s){
 		var r = String(s);
-		r = r.replace(/\\/g, "\\\\");// Backslash
-		r = r.replace(/\//g, "\\/");     // Slash
-		r = r.replace(/\|/g, "\\p");     // Pipe
-		r = r.replace(/\n/g, "\\n");     // Newline
-		r = r.replace(/\r/g, "\\r");     // Carriage Return
-		r = r.replace(/\t/g, "\\t");     // Tab
-		r = r.replace(/\v/g, "\\v");     // Vertical Tab
-		r = r.replace(/ /g, "\\s");      // Whitespace
+		r = r.replace(/\\/g, "\\\\");   // Backslash
+		r = r.replace(/\//g, "\\/");    // Slash
+		r = r.replace(/\|/g, "\\p");    // Pipe
+		r = r.replace(/\n/g, "\\n");    // Newline
+		r = r.replace(/\r/g, "\\r");    // Carriage Return
+		r = r.replace(/\t/g, "\\t");    // Tab
+		r = r.replace(/\v/g, "\\v");    // Vertical Tab
+		r = r.replace(/ /g, "\\s");     // Whitespace
 		return r;
 	}
 	
 	function tsunescape(s){
-		var r = s.replace(/\\s/g, " "); // Whitespace
+		var r = s.replace(/\\s/g, " ");	// Whitespace
 		r = r.replace(/\\p/g, "|");     // Pipe
 		r = r.replace(/\\n/g, "\n");    // Newline
 		r = r.replace(/\\r/g, "\r");    // Carriage Return
@@ -99,7 +99,7 @@ function TeamSpeakClient(host, port){
 		});
 		for(var k in params){
 			var v = params[k];
-			if(util.isArray(v)){ // Mehrere Werte für ein Key = Alle aneinanderklatschen
+			if(util.isArray(v)){ // Multiple values for the same key - concatenate all
 				var doptions = v.map(function(val){
 					return tsescape(k) + "=" + tsescape(val); 
 				});
@@ -124,13 +124,15 @@ function TeamSpeakClient(host, port){
 		reader = LineInputStream(socket);
 		reader.on("line", function(line){
 			var s = line.trim();
-			// Erste zwei vom Server gesendete Zeilen ignorieren
+			// Ignore two first lines sent by server ("TS3" and information message) 
 			if(status < 0){
 				status++;
 				if(status === 0) checkQueue();
 				return;
 			}
-			// Antwort besteht aus ein bis zwei Zeilen: Zuletzt kommt immer error
+			// Server answers with:
+			// [- One line containing the answer ]
+			// - "error id=XX msg=YY". ID is zero if command was executed successfully.
 			var response = undefined;
 			if(s.indexOf("error") === 0){
 				response = parseResponse(s.substr("error ".length).trim());
