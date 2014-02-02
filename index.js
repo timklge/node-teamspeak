@@ -86,6 +86,14 @@ function TeamSpeakClient(host, port){
 		return queue.slice(0);
 	};
 	
+	// Clear the queue of pending commands so that any command that is currently queued won't be executed.
+	// The old queue is returned.
+	TeamSpeakClient.prototype.clearPending = function(){
+		var q = queue;
+		queue = [];
+		return q;
+	};
+	
 	// Send a command to the server
 	TeamSpeakClient.prototype.send = function(){
 		var args = Array.prototype.slice.call(arguments);
