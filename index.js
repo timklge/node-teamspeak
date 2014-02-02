@@ -79,10 +79,9 @@ function TeamSpeakClient(host, port){
 		return response;
 	}
 	
-	// Return pending commands that were already sent to the server.
+	// Return pending commands that are going to be sent to the server.
 	// Note that they have been parsed - Access getPending()[0].text to get
 	// the full text representation of the command.
-	// The pending queue should not be modified.
 	TeamSpeakClient.prototype.getPending = function(){
 		return queue.slice(0);
 	};
