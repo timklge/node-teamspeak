@@ -64,7 +64,7 @@ function TeamSpeakClient(host, port){
 			args.forEach(function(v){
 				var key = tsunescape(v.substr(0, v.indexOf("=")));
 				var value = tsunescape(v.substr(v.indexOf("=")+1));
-				if(parseInt(value, 10) === value) value = parseInt(value, 10);
+				if(parseInt(value, 10) == value) value = parseInt(value, 10);
 				thisrec[key] = value;
 			});
 			return thisrec;
