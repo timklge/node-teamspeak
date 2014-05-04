@@ -27,21 +27,30 @@ function TeamSpeakClient(host, port){
 		r = r.replace(/\\/g, "\\\\");   // Backslash
 		r = r.replace(/\//g, "\\/");    // Slash
 		r = r.replace(/\|/g, "\\p");    // Pipe
+		r = r.replace(/\;/g, "\\;");    // Semicolon
 		r = r.replace(/\n/g, "\\n");    // Newline
+		//r = r.replace(/\b/g, "\\b");    // Info: Backspace fails
+		//r = r.replace(/\a/g, "\\a");    // Info: Bell fails
 		r = r.replace(/\r/g, "\\r");    // Carriage Return
 		r = r.replace(/\t/g, "\\t");    // Tab
 		r = r.replace(/\v/g, "\\v");    // Vertical Tab
-		r = r.replace(/ /g, "\\s");     // Whitespace
+		r = r.replace(/\f/g, "\\f");    // Formfeed
+		r = r.replace(/ /g,  "\\s");    // Whitespace
 		return r;
 	}
 	
 	function tsunescape(s){
-		var r = s.replace(/\\s/g, " ");	// Whitespace
-		r = r.replace(/\\p/g, "|");     // Pipe
-		r = r.replace(/\\n/g, "\n");    // Newline
-		r = r.replace(/\\r/g, "\r");    // Carriage Return
-		r = r.replace(/\\t/g, "\t");    // Tabu
-		r = r.replace(/\\v/g, "\v");    // Vertical Tab
+		var r = String(s);
+		r = r.replace(/\\s/g,  " ");	// Whitespace
+		r = r.replace(/\\p/g,  "|");    // Pipe
+		r = r.replace(/\\;/g,  ";");    // Semicolon
+		r = r.replace(/\\n/g,  "\n");   // Newline
+		//r = r.replace(/\\b/g,  "\b");   // Info: Backspace fails
+		//r = r.replace(/\\a/g,  "\a");   // Info: Bell fails
+		r = r.replace(/\\f/g,  "\f");   // Formfeed
+		r = r.replace(/\\r/g,  "\r");   // Carriage Return
+		r = r.replace(/\\t/g,  "\t");   // Tab
+		r = r.replace(/\\v/g,  "\v");   // Vertical Tab
 		r = r.replace(/\\\//g, "\/");   // Slash
 		r = r.replace(/\\\\/g, "\\");   // Backslash
 		return r;
