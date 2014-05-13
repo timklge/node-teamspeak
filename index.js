@@ -7,10 +7,10 @@
  * ----------------------------------------------------------------------------
  */
 
-var net =             require("net"),
-	LineInputStream = require("line-input-stream"),
-	events =          require("events"),
-	util =            require("util");
+var net =             		require("net"),
+	LineInputStream = 	require("line-input-stream"),
+	events =          	require("events"),
+	util =            	require("util");
 
 function TeamSpeakClient(host, port){
 	events.EventEmitter.call(this);
@@ -27,10 +27,7 @@ function TeamSpeakClient(host, port){
 		r = r.replace(/\\/g, "\\\\");   // Backslash
 		r = r.replace(/\//g, "\\/");    // Slash
 		r = r.replace(/\|/g, "\\p");    // Pipe
-		r = r.replace(/\;/g, "\\;");    // Semicolon
 		r = r.replace(/\n/g, "\\n");    // Newline
-		//r = r.replace(/\b/g, "\\b");    // Info: Backspace fails
-		//r = r.replace(/\a/g, "\\a");    // Info: Bell fails
 		r = r.replace(/\r/g, "\\r");    // Carriage Return
 		r = r.replace(/\t/g, "\\t");    // Tab
 		r = r.replace(/\v/g, "\\v");    // Vertical Tab
@@ -43,10 +40,7 @@ function TeamSpeakClient(host, port){
 		var r = String(s);
 		r = r.replace(/\\s/g,  " ");	// Whitespace
 		r = r.replace(/\\p/g,  "|");    // Pipe
-		r = r.replace(/\\;/g,  ";");    // Semicolon
 		r = r.replace(/\\n/g,  "\n");   // Newline
-		//r = r.replace(/\\b/g,  "\b");   // Info: Backspace fails
-		//r = r.replace(/\\a/g,  "\a");   // Info: Bell fails
 		r = r.replace(/\\f/g,  "\f");   // Formfeed
 		r = r.replace(/\\r/g,  "\r");   // Carriage Return
 		r = r.replace(/\\t/g,  "\t");   // Tab
