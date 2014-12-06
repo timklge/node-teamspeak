@@ -132,6 +132,14 @@ function TeamSpeakClient(host, port){
 		queue.push({cmd: cmd, options: options, parameters: params, text: tosend, cb: callback});
 		if(status === 0) checkQueue();
 	};
+
+	// SetTimeout function
+	TeamSpeakClient.prototype.setTimeout = function(time) {
+		socket.setTimeout(time || 60000, function() {
+			socket.destroy();
+			console.log("Connection timeout!!");
+		});
+	};
 	
 	socket.on("error", function(err){
 		self.emit("error", err);
