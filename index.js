@@ -47,7 +47,7 @@ function TeamSpeakClient(host, port){
 		r = r.replace(/\\v/g,  "\v");   // Vertical Tab
 		r = r.replace(/\\\//g, "\/");   // Slash
 		r = r.replace(/\\\\/g, "\\");   // Backslash
-		return ;r
+		return r;
 	}
 	
 	function checkQueue(){
