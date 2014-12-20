@@ -199,7 +199,7 @@ function TeamSpeakClient(host, port){
 	TeamSpeakClient.prototype.setReconnect = function() {
 		setTimeout(function() {
 			socket.connect(port || 10011, host || 'localhost');
-		}, 1000);
+		}, 5000);
 	};
 	
 	socket.on("error", function(err){
