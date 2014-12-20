@@ -20,7 +20,8 @@ function TeamSpeakClient(host, port){
 		reader =    null,
 		status =    -2,
 		queue =     [],
-		executing = null;
+		executing = null,
+		reconnecting = null;
 	
 	function tsescape(s){
 		var r = String(s);
@@ -68,9 +69,13 @@ function TeamSpeakClient(host, port){
 				if(v.indexOf("=") > -1){
 					var key = tsunescape(v.substr(0, v.indexOf("=")));
 					var value = tsunescape(v.substr(v.indexOf("=")+1));
-					if(parseInt(value, 10) == value) value = parseInt(value, 10);
+					if(parseInt(value, 10) == value) {
+						value = parseInt(value, 10);
+					}
 					thisrec[key] = value;
-				}else thisrec[v] = "";
+				}else {
+					thisrec[v] = "";
+				}
 			});
 			return thisrec;
 		});
@@ -82,6 +87,45 @@ function TeamSpeakClient(host, port){
 		}
 		
 		return response;
+	}
+
+	function doReading() {
+		reader = new LineInputStream(socket);
+		reader.on("line", function(line){
+			var s = line.trim();
+			// Ignore two first lines sent by server ("TS3" and information message) 
+			if(status < 0){
+				status++;
+				if(status === 0) {
+					checkQueue();
+				}
+				return;
+			}
+			// Server answers with:
+			// [- One line containing the answer ]
+			// - "error id=XX msg=YY". ID is zero if command was executed successfully.
+			var response;
+			if(s.indexOf("error") === 0){
+				response = parseResponse(s.substr("error ".length).trim());
+				executing.error = response;
+				if(executing.error.id === "0") {
+					delete executing.error;
+				}
+				if(executing.cb) {
+					executing.cb.call(executing, executing.error, executing.response,executing.rawResponse);
+				}
+				executing = null;
+				checkQueue();
+			} else if(s.indexOf("notify") === 0){
+				s = s.substr("notify".length);
+				response = parseResponse(s);
+				self.emit(s.substr(0, s.indexOf(" ")), response);
+			} else if(executing) {
+				response = parseResponse(s); 
+				executing.rawResponse = s;
+				executing.response = response;
+			}
+		});
 	}
 	
 	// Return pending commands that are going to be sent to the server.
@@ -103,7 +147,7 @@ function TeamSpeakClient(host, port){
 	TeamSpeakClient.prototype.send = function(){
 		var args = Array.prototype.slice.call(arguments);
 		var options = [], params = {};
-		var callback = undefined;
+		var callback;
 		var cmd = args.shift();
 		args.forEach(function(v){
 			if(util.isArray(v)){
@@ -130,7 +174,9 @@ function TeamSpeakClient(host, port){
 			}
 		}
 		queue.push({cmd: cmd, options: options, parameters: params, text: tosend, cb: callback});
-		if(status === 0) checkQueue();
+		if(status === 0) {
+			checkQueue();
+		}
 	};
 
 	// SetTimeout function
@@ -138,6 +184,22 @@ function TeamSpeakClient(host, port){
 		socket.setTimeout(time || 60000, function() {
 			socket.destroy();
 		});
+	};
+
+	// KeepAlive funchtion
+	TeamSpeakClient.prototype.setKeepalive = function(every) {
+ 		setInterval(function() {
+			self.send('version', function(err, res, rawRes) {
+				util.log('Keep Alive sent');
+			});
+		}, every || 50000);
+	};
+
+	// Reconnect function
+	TeamSpeakClient.prototype.setReconnect = function() {
+		setTimeout(function() {
+			socket.connect(port || 10011, host || 'localhost');
+		}, 5000);
 	};
 	
 	socket.on("error", function(err){
@@ -149,38 +211,15 @@ function TeamSpeakClient(host, port){
 	});
 	
 	socket.on("connect", function(){
-		reader = LineInputStream(socket);
-		reader.on("line", function(line){
-			var s = line.trim();
-			// Ignore two first lines sent by server ("TS3" and information message) 
-			if(status < 0){
-				status++;
-				if(status === 0) checkQueue();
-				return;
-			}
-			// Server answers with:
-			// [- One line containing the answer ]
-			// - "error id=XX msg=YY". ID is zero if command was executed successfully.
-			var response = undefined;
-			if(s.indexOf("error") === 0){
-				response = parseResponse(s.substr("error ".length).trim());
-				executing.error = response;
-				if(executing.error.id === "0") delete executing.error;
-				if(executing.cb) executing.cb.call(executing, executing.error, executing.response,
-					executing.rawResponse);
-				executing = null;
-				checkQueue();
-			} else if(s.indexOf("notify") === 0){
-				s = s.substr("notify".length);
-				response = parseResponse(s);
-				self.emit(s.substr(0, s.indexOf(" ")), response);
-			} else if(executing) {
-				response = parseResponse(s); 
-				executing.rawResponse = s;
-				executing.response = response;
-			}
-		});
-		self.emit("connect");
+		if(!reconnecting){
+			doReading();
+			reconnecting += 1;
+		}
+
+		// wait a secont before emiting the event (needed when using auto reconnect)
+		setTimeout(function() {
+			self.emit("connect");
+		}, 1000);
 	}); 
 }
 
