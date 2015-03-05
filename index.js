@@ -137,6 +137,7 @@ function TeamSpeakClient(host, port){
 	TeamSpeakClient.prototype.setTimeout = function(time) {
 		socket.setTimeout(time || 60000, function() {
 			socket.destroy();
+			self.emit("timeout");
 		});
 	};
 	
