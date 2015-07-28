@@ -175,6 +175,10 @@ function TeamSpeakClient(host, port){
 				s = s.substr("notify".length);
 				response = parseResponse(s);
 				self.emit(s.substr(0, s.indexOf(" ")), response);
+				var debugResponse = response;
+				delete debugResponse[s.substr(0, s.indexOf(" "))];
+				debugResponse.eventName = (s.substr(0, s.indexOf(" ")));
+				self.emit("debug", debugResponse);
 			} else if(executing) {
 				response = parseResponse(s); 
 				executing.rawResponse = s;
