@@ -174,7 +174,9 @@ function TeamSpeakClient(host, port){
 			} else if(s.indexOf("notify") === 0){
 				s = s.substr("notify".length);
 				response = parseResponse(s);
-				self.emit(s.substr(0, s.indexOf(" ")), response);
+				delete response[s.substr(0, s.indexOf(" "))];
+				response.event = (s.substr(0, s.indexOf(" ")));
+				self.emit("event", response);
 			} else if(executing) {
 				response = parseResponse(s); 
 				executing.rawResponse = s;
