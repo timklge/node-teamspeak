@@ -20,7 +20,9 @@ function TeamSpeakClient(host, port){
 		reader =    null,
 		status =    -2,
 		queue =     [],
-		executing = null;
+		executing = null
+	        keeper,
+        	lastData;
 	
 	function tsescape(s){
 		var r = String(s);
@@ -134,12 +136,26 @@ function TeamSpeakClient(host, port){
 	};
 
 	// SetTimeout function
-	TeamSpeakClient.prototype.setTimeout = function(time) {
-		socket.setTimeout(time || 60000, function() {
-			socket.destroy();
-			self.emit("timeout");
-		});
-	};
+    TeamSpeakClient.prototype.setTimeout = function(keepAlive, time) {
+        time = time || 10000;
+        socket.setTimeout(time, function() {
+            socket.destroy();
+            self.emit("timeout");
+        });
+        if (keepAlive) {
+            // Clear old keeper intervals if available
+            if (keeper) clearInterval(keeper);
+            // Set the keeper interval to fireup 1 sec before the timeout
+            keeper = setInterval(function() {
+                if (new Date().getTime() - lastData > (time - 1000)) {
+                    self.send("version", function(err, response, rawResponse) {
+                        if (!err) self.emit("keepAlive");
+                    });
+                }
+            }, 500);
+        }
+    };
+
 	
 	socket.on("error", function(err){
 		self.emit("error", err);
@@ -147,6 +163,12 @@ function TeamSpeakClient(host, port){
 	
 	socket.on("close", function(){
 		self.emit("close", queue);
+	});
+	
+	// Register the on data event to update the lastData timestamp for the keepAlive
+	socket.on("data", function(data) {
+		lastData = new Date().getTime();
+		self.emit("data", data);
 	});
 	
 	socket.on("connect", function(){
